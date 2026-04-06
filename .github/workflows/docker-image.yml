@@ -28,13 +28,13 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.PAT_TOKEN }}  # 使用 PAT_TOKEN
 
       - name: Extract metadata for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/littlefish1145/ShiroPlus
+          images: ghcr.io/${{ github.actor }}/shiro-plus
           tags: |
             type=ref,event=branch
             type=ref,event=pr
