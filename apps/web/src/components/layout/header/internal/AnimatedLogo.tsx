@@ -1,6 +1,6 @@
 'use client'
 
-import { m } from 'motion/react'
+import { AnimatePresence, m } from 'motion/react'
 import { useCallback } from 'react'
 
 import { useViewport } from '~/atoms/hooks/viewport'
@@ -10,6 +10,8 @@ import { noopObj } from '~/lib/noop'
 import { Routes } from '~/lib/route-builder'
 import { useAppConfigSelector } from '~/providers/root/aggregation-data-provider'
 
+import { Activity } from './Activity'
+import { useHeaderMetaShouldShow } from './hooks'
 import { SiteOwnerAvatar } from './SiteOwnerAvatar'
 import { useLiveQuery } from './useLiveQuery'
 
@@ -39,22 +41,34 @@ const TapableLogo = () => {
   )
 }
 export const AnimatedLogo = () => {
+  const shouldShowMeta = useHeaderMetaShouldShow()
   const isDesktop = useViewport(($) => $.lg && $.w !== 0)
 
   const isClient = useIsClient()
   if (!isClient) return null
 
-  if (isDesktop) return <TapableLogo />
+  if (isDesktop)
+    return (
+      <>
+        <TapableLogo />
+        <Activity />
+      </>
+    )
 
   return (
-    <m.div
-      layout
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex items-center will-change-[unset]!"
-    >
-      <TapableLogo />
-    </m.div>
+    <AnimatePresence>
+      {!shouldShowMeta && (
+        <m.div
+          layout
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex items-center will-change-[unset]!"
+        >
+          <Activity />
+          <TapableLogo />
+        </m.div>
+      )}
+    </AnimatePresence>
   )
 }

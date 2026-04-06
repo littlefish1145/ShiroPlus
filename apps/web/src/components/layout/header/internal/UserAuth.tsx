@@ -126,16 +126,6 @@ export function UserAuth() {
                   <Fragment>
                     <DropdownMenuItem
                       onClick={() => {
-                        window.open('/dashboard', '_blank')
-                      }}
-                      icon={
-                        <i className="i-mingcute-dashboard-3-line size-4" />
-                      }
-                    >
-                      {t('auth_dashboard')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
                         const adminUrl = getAdminUrl()
                         if (adminUrl) {
                           window.open(adminUrl, '_blank')
