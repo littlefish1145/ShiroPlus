@@ -12,7 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read      # 允许 checkout 代码
+      packages: write 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
