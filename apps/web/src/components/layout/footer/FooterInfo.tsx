@@ -103,10 +103,10 @@ const PoweredBy = async ({ className }: { className?: string }) => {
         triggerElement={
           <StyledLink
             className="cursor-help"
-            href="https://github.com/innei/Shiro"
+            href="https://github.com/littlefish1145/ShiroPlus"
             target="_blank"
           >
-            白
+            ShiroPlus
           </StyledLink>
         }
       >
@@ -116,24 +116,11 @@ const PoweredBy = async ({ className }: { className?: string }) => {
               link: (chunks) => (
                 <StyledLink
                   className="underline"
-                  href="https://github.com/innei/Shiro"
+                  href="https://github.com/littlefish1145/ShiroPlus"
                   target="_blank"
                 >
                   {chunks}
                 </StyledLink>
-              ),
-            })}
-          </p>
-          <p>
-            {t.rich('shiroi_get_via', {
-              link: (chunks) => (
-                <MarkdownLink
-                  popper={false}
-                  noIcon
-                  href="https://github.com/sponsors/Innei"
-                >
-                  {chunks}
-                </MarkdownLink>
               ),
             })}
           </p>

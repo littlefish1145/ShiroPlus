@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes'
 import { useEffect, useRef, useState } from 'react'
 
 import { effectSettingsAtom } from '~/atoms/settings'
+import { usePathname } from '~/i18n/navigation'
 
 const HEIGHT_MAP_RES = 1024
 
@@ -76,8 +77,7 @@ fn fold_hex_30(p_in: vec2f) -> vec2f {
 `
 
 const getComputeWGSL = (count: number) =>
-  `${BASE_WGSL 
-  }
+  `${BASE_WGSL}
 @group(1) @binding(0) var<storage, read_write> particles: array<Particle>;
 @group(1) @binding(1) var<storage, read_write> heightMap: array<f32>;
 
@@ -128,8 +128,7 @@ fn processHeightMap(@builtin(global_invocation_id) id: vec3u) {
 `
 
 const getRenderWGSL = () =>
-  `${BASE_WGSL 
-  }
+  `${BASE_WGSL}
 @group(1) @binding(0) var<storage, read> particles: array<Particle>;
 @group(1) @binding(1) var<storage, read> heightMap: array<f32>;
 
@@ -197,6 +196,8 @@ export const GlobalSnowfall = () => {
   const setupIdRef = useRef(0)
   const settings = useAtomValue(effectSettingsAtom)
   const settingsRef = useRef(settings)
+  const pathname = usePathname()
+  const isHomePage = pathname === '/'
 
   useEffect(() => {
     settingsRef.current = settings
@@ -218,7 +219,7 @@ export const GlobalSnowfall = () => {
   const isDark = mounted && (resolvedTheme === 'dark' || theme === 'dark')
 
   useEffect(() => {
-    if (!mounted || !isDark || !settings.snowfall.enabled) {
+    if (!mounted || !isDark || !settings.snowfall.enabled || !isHomePage) {
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
       if (deviceRef.current) {
         const d = deviceRef.current
@@ -265,8 +266,8 @@ export const GlobalSnowfall = () => {
       })
       const rModule = device.createShaderModule({ code: getRenderWGSL() })
 
-      const {GPUBufferUsage} = (window as any)
-      const {GPUShaderStage} = (window as any)
+      const { GPUBufferUsage } = window as any
+      const { GPUShaderStage } = window as any
 
       const particleData = new Float32Array(particleCount * 8)
       for (let i = 0; i < particleCount; i++) {
@@ -543,9 +544,11 @@ export const GlobalSnowfall = () => {
     settings.snowfall.enabled,
     settings.snowfall.reloadKey,
     settings.snowfall.count,
+    isHomePage,
   ])
 
-  if (!isClient || !isDark || !settings.snowfall.enabled) return null
+  if (!isClient || !isDark || !settings.snowfall.enabled || !isHomePage)
+    return null
 
   return (
     <canvas

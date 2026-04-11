@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import type { PropsWithChildren } from 'react'
 
 import { NoteLeftSidebar } from '~/components/modules/note/NoteLeftSidebar'
-import { PhysicsParticles } from '~/components/ui/background'
 import { LayoutRightSideProvider } from '~/providers/shared/LayoutRightSideProvider'
 
 export default async (props: PropsWithChildren) => (
@@ -14,17 +13,11 @@ export default async (props: PropsWithChildren) => (
       'md:mt-24 print:block! print:max-w-full!',
     )}
   >
-    <div className="absolute inset-0 pointer-events-none">
-      <PhysicsParticles particleCount={50} />
-    </div>
-
     <div className="relative hidden min-w-0 xl:block" data-hide-print>
       <NoteLeftSidebar />
     </div>
 
-    <div className="relative z-[1]">
-      {props.children}
-    </div>
+    <div className="relative z-[1]">{props.children}</div>
 
     <LayoutRightSideProvider className="relative hidden xl:block print:hidden!" />
   </div>
