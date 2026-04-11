@@ -1,7 +1,6 @@
 import { execSync } from 'node:child_process'
 
 import NextBundleAnalyzer from '@next/bundle-analyzer'
-import { codeInspectorPlugin } from 'code-inspector-plugin'
 import { config } from 'dotenv'
 import createNextIntlPlugin from 'next-intl/plugin'
 
@@ -99,7 +98,7 @@ let nextConfig = {
     }
   },
   turbopack: {
-    rules: codeInspectorPlugin({ bundler: 'turbopack', hotKeys: ['altKey'] }),
+    // rules: codeInspectorPlugin({ bundler: 'turbopack', hotKeys: ['altKey'] }),
   },
 
   webpack: (config) => {
@@ -108,9 +107,9 @@ let nextConfig = {
       bufferutil: 'commonjs bufferutil',
     })
 
-    config.plugins.push(
-      codeInspectorPlugin({ bundler: 'webpack', hotKeys: ['altKey'] }),
-    )
+    // config.plugins.push(
+    //   codeInspectorPlugin({ bundler: 'webpack', hotKeys: ['altKey'] }),
+    // )
 
     config.module.rules.push({
       test: /\.svg$/i,

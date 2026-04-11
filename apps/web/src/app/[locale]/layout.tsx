@@ -16,7 +16,7 @@ import { Root } from '~/components/layout/root/Root'
 import { AccentColorStyleInjector } from '~/components/modules/shared/AccentColorStyleInjector'
 import { SearchPanelWithHotKey } from '~/components/modules/shared/SearchFAB'
 import { TocAutoScroll } from '~/components/modules/toc/TocAutoScroll'
-import { WebGPUGlowBackground, GlobalBacklight } from '~/components/ui/background'
+import { GlobalBacklight,GlobalSnowfall } from '~/components/ui/background'
 import { routing } from '~/i18n/routing'
 import { PreRenderError } from '~/lib/error-factory'
 import { sansFont, serifFont } from '~/lib/fonts'
@@ -237,11 +237,11 @@ export default async function LocaleLayout({ children, params }: Props) {
             suppressHydrationWarning
             className={`${sansFont.variable} ${serifFont.variable} m-0 h-full p-0 font-sans`}
           >
-            <WebGPUGlowBackground />
-            <GlobalBacklight />
             <NextIntlClientProvider messages={messages}>
               <ErrorBoundary>
                 <WebAppProviders>
+                  <GlobalBacklight />
+                  <GlobalSnowfall />
                   <AggregationProvider
                     aggregationData={data}
                     appConfig={themeConfig.config}

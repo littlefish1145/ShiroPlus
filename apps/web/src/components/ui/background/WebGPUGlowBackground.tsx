@@ -40,9 +40,9 @@ export const WebGPUGlowBackground = () => {
 
     const orbCount = 8
     orbsRef.current = Array.from({ length: orbCount }, (_, i) => ({
-      x: 0.1 + (i * 1.0) / orbCount,
-      y: 0.1 + (Math.sin(i) * 0.3) + (i % 2) * 0.4,
-      baseY: 0.1 + (Math.sin(i) * 0.3) + (i % 2) * 0.4,
+      x: 0.1 + (i * 1) / orbCount,
+      y: 0.1 + Math.sin(i) * 0.3 + (i % 2) * 0.4,
+      baseY: 0.1 + Math.sin(i) * 0.3 + (i % 2) * 0.4,
       radius: 0.1 + Math.random() * 0.08,
       speed: 0.0001 + Math.random() * 0.0002,
       phase: Math.random() * Math.PI * 2,
@@ -53,8 +53,9 @@ export const WebGPUGlowBackground = () => {
       // 清除画布为透明背景
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      const isDark = document.documentElement.classList.contains('dark') ||
-        document.documentElement.getAttribute('data-theme') === 'dark'
+      const isDark =
+        document.documentElement.classList.contains('dark') ||
+        document.documentElement.dataset.theme === 'dark'
 
       const lightColors = [
         { r: 160, g: 110, b: 80 },
@@ -81,21 +82,32 @@ export const WebGPUGlowBackground = () => {
       const colors = isDark ? darkColors : lightColors
 
       orbsRef.current.forEach((orb, i) => {
-        orb.y = orb.baseY + Math.sin(time * orb.speed + orb.phase) * orb.floatRange
+        orb.y =
+          orb.baseY + Math.sin(time * orb.speed + orb.phase) * orb.floatRange
 
         const x = orb.x * canvas.width
         const y = orb.y * canvas.height
         const pulse = Math.sin(time * 0.0003 + orb.phase) * 0.15 + 0.85
-        const radius = orb.radius * Math.min(canvas.width, canvas.height) * pulse
+        const radius =
+          orb.radius * Math.min(canvas.width, canvas.height) * pulse
 
         const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
         const color = colors[i % colors.length]
         // 统一透明度，亮色和暗色一样
-        const alpha = 0.6
+        const alpha = 1
 
-        gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`)
-        gradient.addColorStop(0.3, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.6})`)
-        gradient.addColorStop(0.6, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.2})`)
+        gradient.addColorStop(
+          0,
+          `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`,
+        )
+        gradient.addColorStop(
+          0.3,
+          `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.6})`,
+        )
+        gradient.addColorStop(
+          0.6,
+          `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.2})`,
+        )
         gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`)
 
         ctx.fillStyle = gradient
@@ -117,7 +129,17 @@ export const WebGPUGlowBackground = () => {
     <canvas
       ref={canvasRef}
       className="pointer-events-none fixed inset-0 h-full w-full"
-      style={{ zIndex: -1, bottom: 0, left: 0, right: 0, top: 0, position: 'fixed' }}
+      style={{
+        zIndex: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        top: 0,
+        position: 'fixed',
+        WebkitMaskImage:
+          'linear-gradient(to bottom, black 0%, transparent 70%)',
+        maskImage: 'linear-gradient(to bottom, black 0%, transparent 70%)',
+      }}
     />
   )
 }

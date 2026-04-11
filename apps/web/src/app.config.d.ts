@@ -98,6 +98,9 @@ declare global {
     posts: {
       mode: 'loose' | 'compact'
     }
+    github: {
+      username: string
+    }
   }
   export interface Donate {
     enable: boolean

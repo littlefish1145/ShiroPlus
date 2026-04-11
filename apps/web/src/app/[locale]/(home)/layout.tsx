@@ -9,6 +9,7 @@ import { definePrerenderPage, requestErrorHandler } from '~/lib/request.server'
 import { ActivityScreen } from './components/ActivityScreen'
 import { Hero } from './components/Hero'
 import { HomePageTimeLine } from './components/HomePageTimeLine'
+import { ProjectAndGithub } from './components/ProjectAndGithub'
 import { Windsock } from './components/Windsock'
 import { queryKey } from './query'
 
@@ -39,6 +40,7 @@ export default definePrerenderPage()({
         <Hero />
         <ActivityScreen />
         <HomePageTimeLine />
+        <ProjectAndGithub />
         <Windsock />
         {props.children}
       </QueryHydrate>

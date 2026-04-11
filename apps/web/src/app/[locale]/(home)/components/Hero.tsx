@@ -7,13 +7,13 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { createElement, useRef } from 'react'
 
+import { BacklightTrigger } from '~/components/common/BacklightTrigger'
 import { isSupportIcon, SocialIcon } from '~/components/modules/home/SocialIcon'
 import {
   fetchHitokoto,
   SentenceType,
 } from '~/components/modules/shared/Hitokoto'
 import { MotionButtonBase } from '~/components/ui/button'
-import { PhysicsParticles } from '~/components/ui/background'
 import {
   BottomToUpTransitionView,
   TextUpTransitionView,
@@ -40,7 +40,7 @@ export const Hero = () => {
     title.template.reduce((acc, cur) => acc + (cur.text?.length || 0), 0) * 50
   return (
     <div className="relative mx-auto mt-20 min-w-0 max-w-7xl overflow-hidden lg:mt-[-4.5rem] lg:h-dvh lg:min-h-[800px] lg:px-8">
-      <PhysicsParticles particleCount={80} />
+      <BacklightTrigger />
       <TwoColumnLayout
         leftContainerClassName="mt-[120px] lg:mt-0 lg:h-[15rem] lg:h-1/2"
         rightContainerClassName="lg:flex lg:justify-end lg:items-end"
