@@ -426,7 +426,8 @@ export const GlobalSnowfall = () => {
       })
 
       const canvas = canvasRef.current!
-      const ctx = canvas.getContext('webgpu')!
+      const ctx = canvas.getContext('webgpu') as GPUCanvasContext | null
+      if (!ctx) return
 
       let lastT = performance.now()
       const frame = (time: number) => {

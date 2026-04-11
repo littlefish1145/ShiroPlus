@@ -11,6 +11,7 @@ export interface EffectSettings {
     size: number
     speed: number
     count: number
+    reloadKey: number
   }
 }
 

@@ -41,6 +41,9 @@ export const defaultThemeConfig: AppThemeConfig = {
       posts: {
         mode: 'loose',
       },
+      github: {
+        username: '',
+      },
     },
   },
   footer: {

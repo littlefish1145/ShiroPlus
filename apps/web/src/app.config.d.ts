@@ -1,6 +1,131 @@
 import type { ScriptProps } from 'next/script'
 
 declare global {
+  interface Navigator {
+    gpu: GPU
+  }
+
+  interface GPUDevice {
+    destroy(): void
+    createShaderModule(descriptor: { code: string }): GPUShaderModule
+    createBuffer(descriptor: {
+      size: number
+      usage: number
+      mappedAtCreation?: boolean
+    }): GPUBuffer
+    createBindGroupLayout(descriptor: {
+      entries: {
+        binding: number
+        visibility: number
+        buffer?: { type: string }
+      }[]
+    }): GPUBindGroupLayout
+    createPipelineLayout(descriptor: {
+      bindGroupLayouts: GPUBindGroupLayout[]
+    }): GPUPipelineLayout
+    createComputePipeline(descriptor: {
+      layout: GPUPipelineLayout
+      compute: { module: GPUShaderModule; entryPoint: string }
+    }): GPUComputePipeline
+    createRenderPipeline(descriptor: {
+      layout: GPUPipelineLayout
+      vertex: { module: GPUShaderModule; entryPoint: string }
+      fragment: {
+        module: GPUShaderModule
+        entryPoint: string
+        targets: {
+          format: string
+          blend?: {
+            color: { srcFactor: string; dstFactor: string; operation: string }
+            alpha: { srcFactor: string; dstFactor: string; operation: string }
+          }
+        }[]
+      }
+      primitive: { topology: string }
+    }): GPURenderPipeline
+    createBindGroup(descriptor: {
+      layout: GPUBindGroupLayout
+      entries: { binding: number; resource: { buffer: GPUBuffer } }[]
+    }): GPUBindGroup
+    createCommandEncoder(): GPUCommandEncoder
+    queue: GPUQueue
+  }
+
+  interface GPU {
+    requestAdapter(): Promise<GPUAdapter | null>
+    getPreferredCanvasFormat(): string
+  }
+
+  interface GPUAdapter {
+    requestDevice(): Promise<GPUDevice | null>
+  }
+
+  interface GPUCanvasContext {
+    configure(configuration: {
+      device: GPUDevice
+      format: string
+      alphaMode?: string
+    }): void
+    getCurrentTexture(): GPUTexture
+  }
+
+  interface GPUTexture {
+    createView(): GPUTextureView
+  }
+
+  interface GPUTextureView {}
+
+  interface GPUBuffer {
+    getMappedRange(): ArrayBuffer
+    unmap(): void
+  }
+
+  interface GPUShaderModule {}
+
+  interface GPUBindGroupLayout {}
+
+  interface GPUPipelineLayout {}
+
+  interface GPUComputePipeline {}
+
+  interface GPURenderPipeline {}
+
+  interface GPUBindGroup {}
+
+  interface GPUCommandEncoder {
+    beginComputePass(): GPUComputePassEncoder
+    beginRenderPass(descriptor: {
+      colorAttachments: {
+        view: GPUTextureView
+        clearValue: { r: number; g: number; b: number; a: number }
+        loadOp: string
+        storeOp: string
+      }[]
+    }): GPURenderPassEncoder
+    finish(): GPUCommandBuffer
+  }
+
+  interface GPUComputePassEncoder {
+    setPipeline(pipeline: GPUComputePipeline): void
+    setBindGroup(index: number, group: GPUBindGroup): void
+    dispatchWorkgroups(x: number): void
+    end(): void
+  }
+
+  interface GPURenderPassEncoder {
+    setPipeline(pipeline: GPURenderPipeline): void
+    setBindGroup(index: number, group: GPUBindGroup): void
+    draw(vertexCount: number, instanceCount?: number): void
+    end(): void
+  }
+
+  interface GPUCommandBuffer {}
+
+  interface GPUQueue {
+    writeBuffer(buffer: GPUBuffer, offset: number, data: BufferSource): void
+    submit(buffers: GPUCommandBuffer[]): void
+  }
+
   export interface AppThemeConfig {
     config: AppConfig
     footer: FooterConfig
