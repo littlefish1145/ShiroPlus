@@ -136,44 +136,26 @@ export const Hero = () => {
 
 const FootHitokoto = () => {
   const t = useTranslations('home')
-  const { custom, random } = useAppConfigSelector(
+  const { custom } = useAppConfigSelector(
     (config) => config.hero.hitokoto || {},
   )!
 
-  if (random) return <RemoteHitokoto />
-  return (
-    <small className="text-center">
-      {custom ?? t('hero_default_hitokoto')}
-    </small>
-  )
+  if (custom) {
+    return <small className="text-center">{custom}</small>
+  }
+
+  return <RemoteHitokoto />
 }
 
 const RemoteHitokoto = () => {
   const {
-    data: hitokoto,
+    data: hitokotoData,
     isLoading,
     refetch,
     isRefetching,
   } = useQuery({
-    queryKey: ['hitokoto'],
-    queryFn: () =>
-      fetchHitokoto([
-        SentenceType.动画,
-        SentenceType.原创,
-        SentenceType.哲学,
-        SentenceType.文学,
-      ]).then((data) => {
-        const postfix = Object.values({
-          from: data.from,
-          from_who: data.from_who,
-          creator: data.creator,
-        }).find(Boolean)
-        if (!data.hitokoto) {
-          return null
-        } else {
-          return data.hitokoto + (postfix ? ` —— ${postfix}` : '')
-        }
-      }),
+    queryKey: ['hitokoto', 'f'],
+    queryFn: () => fetchHitokoto(SentenceType.来自网络),
     refetchInterval: 30_0000,
     staleTime: Infinity,
     refetchOnMount: 'always',
@@ -184,7 +166,11 @@ const RemoteHitokoto = () => {
 
   const memoedLoadingRef = useRef(isLoading)
 
-  if (!hitokoto) return null
+  if (isLoading && !hitokotoData) return null
+  if (!hitokotoData) return null
+
+  const { hitokoto, from, from_who, uuid } = hitokotoData
+  const postfix = [from, from_who].find(Boolean)
 
   return (
     <m.small
@@ -194,12 +180,21 @@ const RemoteHitokoto = () => {
       animate={{ opacity: 1, y: 0 }}
       className="group flex w-[80ch] items-center justify-center text-balance"
     >
-      {hitokoto}
+      <a
+        href={`https://hitokoto.cn/?uuid=${uuid}`}
+        target="_blank"
+        rel="noreferrer"
+        className="shiro-link--underline"
+      >
+        {hitokoto}
+        {postfix && <span className="opacity-80"> —— {postfix}</span>}
+      </a>
       <MotionButtonBase
         className={clsxm(
-          'ml-3 flex items-center duration-200 group-hover:opacity-100',
-
-          isRefetching ? 'animate-spin' : 'opacity-0',
+          'ml-3 flex items-center duration-200',
+          isRefetching
+            ? 'animate-spin opacity-100'
+            : 'opacity-0 group-hover:opacity-100',
         )}
         disabled={isRefetching}
         onClick={() => refetch()}
